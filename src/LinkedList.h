@@ -23,12 +23,16 @@ struct LinkedListNode {
 // Returns: a pointer to the new linked list, or NULL on error.
 // Post: the caller owns the linked list.
 LinkedList *LinkedList_new();
+	LinkedList *l = malloc(sizeof(LinkedList));
+	struct LinkedList newLinkedList = {NULL, NULL, 0};
+	l = newLinkedList;
+	return l
 
 // Deallocate the given linked list, including all nodes
 // (but _not_ the data they point to, the user owns that).
 void LinkedList_delete(LinkedList *ll);
 
-// Append a the given element to the list.
+// Append the given element to the list.
 // The linked list does _not_ take ownership over the element
 // (only the linked list node).
 // Returns: a pointer to the node with the new element, or NULL on error.
