@@ -8,13 +8,15 @@
 
 typedef struct Vertex Vertex;
 typedef struct Graph Graph;
-struct Vertex {
+struct Vertex 
+{
 	int id; 					// a number in [0; numVertices[
 	LinkedList *outNeighbours; // A linked list of vertices.
 	LinkedList *inNeighbours; // A linked list of vertices
 };
 
-struct Graph {
+struct Graph 
+{
 	int numVertices;
 	int numEdges;
 	Vertex *vertices; 		   // An array of numVertices vertices
@@ -119,9 +121,56 @@ Graph *Graph_read(const char *filename)
 
 
 // Deallocates the given graph and all its associated memory.
-void Graph_delete(Graph *g);
+void Graph_delete(Graph *g)
+{
+	int sizebit = (sizeof(g.vertices) / sizeof(g.vertices[0]))
+	for(int i = 0; i < sizebit; i++)
+	{
+		LinkedList.LinkedList_delete(g.vertices[i].outNeighbours);
+		LinkedList.LinkedList_delete(g.vertices[i].inNeighbours);
+	}
+	free(g);
+}
 
 // Prints some useful information about the given graph.
-void Graph_print(Graph *g);
+void Graph_print(Graph *g)
+{
+	//print amt. of vertices and edges.
+	printf("\t\t|DATA|\n
+			 ________________________________________________\n")
+	printf("| The entered graph contains the following data: |\n")
+	printf("  Number of vertices: %d \n", g.numVertices)
+	printf("  Number of edges: 	%d \n", g.numEdges)
+	printf("|________________________________________________|\n")
+	printf(" ________________________________________________\n")
+	printf("|The following as an adjecency matrix representation \n
+	         of the given graph: \n")
+	printf(" ________________________________________________\n")
+	printf("|                                                |\n")
+	
+	//print visual representation of the 
+	//accompanying adjecency matrix
+	int graphLines = g.numVertices
+	for(int k = 0; k <= graphLines; k++)
+	{
+		char row[graphLines];
+		int size = g.vertices[k].outNeighbours.size;
+		struct LinkedListNode current = g.vertices[k].outNeighbours.head;
+		for(int n = 1; n <= size; n++)
+		{
+			int numelem = (sizeof(g.vertices) / sizeof(g.vertices[0]))
+			for (int j = 0; j < numelem; j++) 
+			{
+				if (current.data == g.vertices[j]) 
+				{
+					row[j] = 1;
+				}
+			}
+		}
+		printf("%c \n", row)
+	}
+	printf("|                                                |\n")
+	printf(" ________________________________________________\n")
+}
 
 #endif // GRAPH_H
