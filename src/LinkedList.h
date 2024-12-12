@@ -36,7 +36,13 @@ LinkedList *LinkedList_new()
 // (but _not_ the data they point to, the user owns that).
 void LinkedList_delete(LinkedList *ll);
 {
-	
+	LinkedListNode *current = ll.head;
+	for (int i = 0; i < ll.size; i++) {
+		LinkedListNode *next = current.next;
+		free(current);
+		current = next;
+	}
+	free(ll);
 }
 
 // Append the given element to the list.
@@ -45,12 +51,13 @@ void LinkedList_delete(LinkedList *ll);
 // Returns: a pointer to the node with the new element, or NULL on error.
 LinkedListNode *LinkedList_append(LinkedList *ll, void *elem)
 {
+	LinkedListNode *n = malloc(sizeof(LinkedListNode));
 	LinkedListNode newNode = {NULL, ll.tail, elem}
-	LinkedListNode *p = newNode;
-	ll.tail.next = p;
-	ll.tail = p;
+	n = newNode;
+	ll.tail.next = n;
+	ll.tail = n;
 	ll.size++;
-	return p;
+	return n;
 }
 
 // Remove and return the first element from the given list.

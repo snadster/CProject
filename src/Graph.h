@@ -34,7 +34,7 @@ Graph *Graph_new(int n)
 		arr[i].outNeighbours = LinkedList_new();
 		arr[i].inNeighbours = LinkedList_new(); 
 	}
-	struct Graph newGraph = {n, 0, arr};
+	Graph newGraph = {n, 0, arr};
 	Graph g = newGraph;
 	return g;
 }
@@ -43,11 +43,11 @@ Graph *Graph_new(int n)
 // Adds an edge from the i'th to the j'th vertex (0-indexed).
 void Graph_addEdge(Graph *g, int i, int j)
 {
-	struct LinkedListNode newEdgeOut = {NULL, NULL, g.vertices[j]};
-	LinkedList_append(g.vertices[i].outNeighbours, newEdgeOut);
+	void *out = g.vertices[j];
+	LinkedList_append(g.vertices[i].outNeighbours, out);
 
-	struct LinkedListNode newEdgeIn = {NULL, NULL, g.vertices[i]};
-	LinkedList_append(g.vertices[j].inNeighbours, newEdge);
+	void *in = g.vertices[i];
+	LinkedList_append(g.vertices[j].inNeighbours, in);
 }
 
 
@@ -155,7 +155,7 @@ void Graph_print(Graph *g)
 	{
 		char row[graphLines];
 		int size = g.vertices[k].outNeighbours.size;
-		struct LinkedListNode current = g.vertices[k].outNeighbours.head;
+		LinkedListNode current = g.vertices[k].outNeighbours.head;
 		for(int n = 1; n <= size; n++)
 		{
 			int numelem = (sizeof(g.vertices) / sizeof(g.vertices[0]))
