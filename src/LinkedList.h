@@ -1,6 +1,8 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
+#include <stdio.h>
+#include <errno.h>
 // A linked list containing any type of pointer.
 // The linked list does _not_ own its elements.
 
@@ -28,17 +30,18 @@ LinkedList *LinkedList_new()
 {
 	LinkedList *l = malloc(sizeof(LinkedList));
 	LinkedList newLinkedList = {NULL, NULL, 0};
-	l = newLinkedList;
+	l = &newLinkedList;
 	return l;
 }
 
 // Deallocate the given linked list, including all nodes
 // (but _not_ the data they point to, the user owns that).
-void LinkedList_delete(LinkedList *ll);
+void LinkedList_delete(LinkedList *ll)
 {
-	LinkedListNode *current = ll.head;
-	for (int i = 0; i < ll.size; i++) {
-		LinkedListNode *next = current.next;
+	LinkedListNode *current = ll->head;
+	for (int i = 0; i < ll->size; i++) 
+	{
+		LinkedListNode *next = current->next;
 		free(current);
 		current = next;
 	}
@@ -52,11 +55,11 @@ void LinkedList_delete(LinkedList *ll);
 LinkedListNode *LinkedList_append(LinkedList *ll, void *elem)
 {
 	LinkedListNode *n = malloc(sizeof(LinkedListNode));
-	LinkedListNode newNode = {NULL, ll.tail, elem}
-	n = newNode;
-	ll.tail.next = n;
-	ll.tail = n;
-	ll.size++;
+	LinkedListNode newNode = {NULL, ll->tail, elem};
+	n = &newNode;
+	ll->tail->next = n;
+	ll->tail = n;
+	ll->size++;
 	return n;
 }
 
@@ -64,25 +67,25 @@ LinkedListNode *LinkedList_append(LinkedList *ll, void *elem)
 // Pre: ll->size != 0
 void *LinkedList_popFront(LinkedList *ll)
 {
-	if (ll.size == 0) {
+	if (ll->size == 0) {
 		printf("Cannot pop from empty list");
 	}
-	LinkedListNode elem = ll.head;
-	ll.head.next.prev = NULL;
-	ll.head = ll.head.next;
-	ll.size = ll.size - 1;
-	return elem.data;
+	LinkedListNode *elem = ll->head;
+	ll->head->next->prev = NULL;
+	ll->head = ll->head->next;
+	ll->size = ll->size - 1;
+	return elem->data;
 }
 
 // Find the linked list node containing the given element.
 // Returns: a pointer to the found node, or NULL if the element was not found.
 LinkedListNode *LinkedList_find(LinkedList *ll, void *elem)
 {
-	LinkedListNode *current = ll.head;
+	LinkedListNode *current = ll->head;
 	void *result = NULL;
-	for (int i = 0; i <= ll.size; i++) {
-		if (&elem == &current.data) {
-			result = current.data;
+	for (int i = 0; i <= ll->size; i++) {
+		if (&elem == &current->data) {
+			result = current->data;
 		}
 	}
 	return result;
@@ -93,13 +96,13 @@ LinkedListNode *LinkedList_find(LinkedList *ll, void *elem)
 // Returns: node->data
 void *LinkedList_remove(LinkedList *ll, LinkedListNode *node)
 {
-	if (LinkedList_find(ll, node.data) == NULL) {
+	if (LinkedList_find(ll, node->data) == NULL) {
 		printf("Node not in list");
 	}
-	node.prev.next = node.next;
-	node.next.prev = node.prev; 
-	ll.size = ll.size - 1;
-	void *data = node.data;
+	node->prev->next = node->next;
+	node->next->prev = node->prev; 
+	ll->size = ll->size - 1;
+	void *data = node->data;
 	free(node);
 	return data;
 }

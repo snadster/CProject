@@ -29,7 +29,7 @@ struct Graph
 Graph *Graph_new(int n)
 {
 	Graph *g = malloc(sizeof(Graph));
-	Vertex *arr[n];
+	Vertex arr[n];
 	for (int i = 0; i < n; i++){
 		arr[i].outNeighbours = LinkedList_new();
 		arr[i].inNeighbours = LinkedList_new(); 
@@ -43,11 +43,11 @@ Graph *Graph_new(int n)
 // Adds an edge from the i'th to the j'th vertex (0-indexed).
 void Graph_addEdge(Graph *g, int i, int j)
 {
-	void *out = g.vertices[j];
-	LinkedList_append(g.vertices[i].outNeighbours, out);
+	void (*out)(Vertex*) = &g -> vertices[j];
+	LinkedList_append(&g->vertices[i].outNeighbours, out);
 
-	void *in = g.vertices[i];
-	LinkedList_append(g.vertices[j].inNeighbours, in);
+	void (*in)(Vertex*) = &g -> vertices[i];
+	LinkedList_append(&g->vertices[j].inNeighbours, in);
 }
 
 
@@ -87,7 +87,8 @@ Graph *Graph_read(const char *filename)
 	//now the data is in fileData!//
 
 	//make the graph//
-	Graph karen = Graph_new();
+	Graph *newGraph = Graph_new(fileData[0]);
+	Graph *p = &newGraph;
 
 	//find the first line, excluding the vertex count
 	int k = 0;
@@ -109,12 +110,12 @@ Graph *Graph_read(const char *filename)
 			if(fileData[j] == 1)
 			{
 				edges++;
-				Graph_addEdge(karen, i, j-2);
+				Graph_addEdge(p, i, j-2);
 			}
 		}
 	}
 	//update edges on the graph?
-	karen.numEdges = edges;
+	newGraph->numEdges = edges;
 	
 	fclose(readFile);
 }
@@ -123,11 +124,11 @@ Graph *Graph_read(const char *filename)
 // Deallocates the given graph and all its associated memory.
 void Graph_delete(Graph *g)
 {
-	int sizebit = (sizeof(g.vertices) / sizeof(g.vertices[0]))
+	int sizebit = (sizeof(g->vertices) / sizeof(g->vertices[0]));
 	for(int i = 0; i < sizebit; i++)
 	{
-		LinkedList.LinkedList_delete(g.vertices[i].outNeighbours);
-		LinkedList.LinkedList_delete(g.vertices[i].inNeighbours);
+		LinkedList_delete(g->vertices[i].outNeighbours);
+		LinkedList_delete(g->vertices[i].inNeighbours);
 	}
 	free(g);
 }
@@ -136,41 +137,34 @@ void Graph_delete(Graph *g)
 void Graph_print(Graph *g)
 {
 	//print amt. of vertices and edges.
-	printf("\t\t|DATA|\n
-			 ________________________________________________\n")
-	printf("| The entered graph contains the following data: |\n")
-	printf("  Number of vertices: %d \n", g.numVertices)
-	printf("  Number of edges: 	%d \n", g.numEdges)
-	printf("|________________________________________________|\n")
-	printf(" ________________________________________________\n")
-	printf("|The following as an adjecency matrix representation \n
-	         of the given graph: \n")
-	printf(" ________________________________________________\n")
-	printf("|                                                |\n")
+	printf("\t\t|DATA|\n ________________________________________________\n");
+	printf("| The entered graph contains the following data: |\n");
+	printf("  Number of vertices: %d \n", g->numVertices);
+	printf("  Number of edges: 	%d \n", g->numEdges);
+	printf("|________________________________________________|\n");
+	printf(" ________________________________________________\n");
+	printf("|The following as an adjecency matrix representation \n of the given graph: \n");
+	printf(" ________________________________________________\n");
+	printf("|                                                |\n");
 	
 	//print visual representation of the 
 	//accompanying adjecency matrix
-	int graphLines = g.numVertices
+	int graphLines = &g->numVertices; //nr rows and nr bubbles
 	for(int k = 0; k <= graphLines; k++)
 	{
 		char row[graphLines];
-		int size = g.vertices[k].outNeighbours.size;
-		LinkedListNode current = g.vertices[k].outNeighbours.head;
-		for(int n = 1; n <= size; n++)
+		for (int j = 0; j < graphLines; j++) 
 		{
-			int numelem = (sizeof(g.vertices) / sizeof(g.vertices[0]))
-			for (int j = 0; j < numelem; j++) 
+			void (*edge)(Vertex*) = &g -> vertices[j];
+			if (LinkedList_find(g->vertices[k].outNeighbours, edge))
 			{
-				if (current.data == g.vertices[j]) 
-				{
-					row[j] = 1;
-				}
+				row[j] = 1;
 			}
 		}
-		printf("%c \n", row)
+		printf("%c \n", row);
 	}
-	printf("|                                                |\n")
-	printf(" ________________________________________________\n")
+	printf("|                                                |\n");
+	printf(" ________________________________________________\n");
 }
 
 #endif // GRAPH_H
