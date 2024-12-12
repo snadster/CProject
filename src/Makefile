@@ -7,9 +7,9 @@ LDFLAGS = -Lpath/to/stuff/lib $(SAN_FLAGS)
 
 OBJS = LinkedList.h Graph.h cycleDetection.h main.c
 
-prog: $(OBJS)
+detectCycles: $(OBJS)
 	$(CC) $(LDFLAGS) -o  $@  $^  $(LDLIBS)
 	
 .PHONY: clean
 clean:
-	rm -f *.o prog
+	rm -f *.o detectCycles

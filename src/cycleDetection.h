@@ -12,57 +12,102 @@
 // The input may be altered in the process.
 void cycleDetection(Graph *g)
 {
-    Vertex L[g->numVertices];
-    int gVerts = g->numVertices;
-    int count;
+    
+    //Vertex L[g->numVertices];
+    //int gVerts = g->numVertices;
+    //int count;
     //set of vertices of G with no incoming edges
-    for(int x = 0; x <= gVerts; x++)
-    {
+    //for(int x = 0; x <= gVerts; x++)
+    //{
         //i need the specific vertex to interact with
         //bc i need to add the vertices with 0 in neighbors to s.
-        if(g->vertices[x].inNeighbours->size == 0)
-        {
-            count++;
-        }
-    }
-    Vertex S[count]; //a set of vertices? 
+        //if(g->vertices[x].inNeighbours->size == 0)
+        //{
+            //count++;
+        //}
+    //}
+    //Vertex S[count]; //a set of vertices? 
 
-    int indexS = 0;
-    int indexG = 0;
-    while (indexS < (sizeof(S) / sizeof(S[0]))) 
-    {
-        if (g->vertices[indexG].inNeighbours->size == 0) 
-        {
-            S[indexS] = g->vertices[indexG];
-            indexS++;
-            indexG++;
-        }
-        else {
-            indexG++;
-        }
-    }
+    //int indexS = 0;
+    //int indexG = 0;
+    //while (indexS < (sizeof(S) / sizeof(S[0]))) 
+    //{
+        //if (g->vertices[indexG].inNeighbours->size == 0) 
+        //{
+            //S[indexS] = g->vertices[indexG];
+            //indexS++;
+            //indexG++;
+        //}
+        //else {
+            //indexG++;
+        //}
+    //}
 
-    while (S != empty)
-    {
-        u = //remove a node/vertice from S, first i need S tho.
-        append(L, u);
+    //while (S != empty)
+    //{
+        //u = //remove a node/vertice from S, first i need S tho.
+        //append(L, u);
         // need only the vertices with an edge from u to v, how?
-        for(v=0; v >= sizeof(g); v++)
-        {
-            if (v.inNeighbors == [])
-            {
-                append(S, v);
+        //for(v=0; v >= sizeof(g); v++)
+        //{
+            //if (v.inNeighbors == [])
+            //{
+                //append(S, v);
                 //remove edge e from graph G?
+            //}
+        //}
+
+    //}
+
+    //if (g.numEdges != 0)
+    //{
+        //printf("Error: %d\n", errno);
+    //}
+    //else
+    //{
+        //return L;
+    //}
+
+    //ZeroIn contains the id of the vertices with no in-neighbours
+    int S[g->numVertices], first = 0, last = 0;
+    for (int i = 0; i < g->numVertices; i++) 
+    {
+        if (g->vertices[i].inNeighbours->size == 0) 
+        {
+            S[last++] = i;
+        }
+    }
+
+    int visited = 0;
+    int L[g->numVertices];
+
+    while (first < last) 
+    {
+        int u = S[first++];
+        L[visited++] = u;
+
+        for (int v = 0; v < g->numVertices; v++) 
+        {
+            void (*p)(Vertex*) = &g -> vertices[v]; 
+            if (LinkedList_find(g->vertices[u].outNeighbours, p))
+            {
+                if (g->vertices[v].inNeighbours->size == 1) 
+                {
+                    S[last++] = v;
+                }
+                LinkedList_remove(g->vertices[u].outNeighbours, p);
+                void (*p)(Vertex*) = &g -> vertices[u];
+                LinkedList_remove(g->vertices[v].inNeighbours, u);
+                g->numEdges--;
             }
         }
-
     }
 
-    if (g.numEdges != 0)
+    if (g->numEdges != 0) 
     {
         printf("Error: %d\n", errno);
     }
-    else
+    else 
     {
         return L;
     }
