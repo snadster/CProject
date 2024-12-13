@@ -107,7 +107,7 @@ Graph *Graph_read(const char *filename)
 	for(int i = 0; i < fileData[0]; i++)
 	{
 		//the columns (edges)
-		for(int j = firstLine; fileData[j] != "\n"; j++)	//prior math: (i * (fileData[0] + 1)) + 2
+		for(int j = firstLine; fileData[j] != '\n'; j++)	//prior math: (i * (fileData[0] + 1)) + 2
 		{
 			if(fileData[j] == 1)
 			{
@@ -154,20 +154,19 @@ void Graph_print(Graph *g)
 	int graphLines = g->numVertices; //nr rows and nr bubbles
 	for(int k = 0; k <= graphLines; k++)
 	{
-		int row[graphLines];
 		for (int j = 0; j < graphLines; j++) 
 		{
 			void* edge = &g -> vertices[j];
 			if (LinkedList_find(g->vertices[k].outNeighbours, edge))
 			{
-				row[j] = 1;
+				printf("1");
 			}
 			else 
 			{
-				row[j] = 0;
+				printf("0");
 			}
 		}
-		printf("%c \n", row);
+		printf("\n");
 	}
 	printf("|                                                |\n");
 	printf(" ________________________________________________\n");

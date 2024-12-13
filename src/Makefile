@@ -1,8 +1,7 @@
-SAN_FLAGS = -fsanitize=address ,undefined ,leak
+SAN_FLAGS = -fsanitize=address,undefined,leak
 CFLAGS = -Wall  -g -O2 $(SAN_FLAGS)
-LDLIBS = -lm  -lstuff
-CPPFLAGS = -ICProject/cycleDetection.h -ICProject/LinkedList.h -IGraph.h
-LDFLAGS = -Lpath/to/stuff/lib $(SAN_FLAGS)
+LDLIBS = -lm
+LDFLAGS = $(SAN_FLAGS)
 
 OBJS = LinkedList.h Graph.h cycleDetection.h main.c
 
