@@ -64,14 +64,16 @@ Graph *Graph_read(const char *filename)
 	//read file//
 	//open the file in read mode
 	FILE *readFile;
-	readFile = fopen("filename", "r");
+	readFile = fopen(filename, "r");
 
 	//find file size (siz)
 	fseek(readFile, 0L, SEEK_END);
+
 	long end = ftell(readFile);
 	long start = fseek(readFile, 0L, SEEK_SET);
 	
 	int siz = end - start;
+	printf("%d", siz);
 
 	//store content of file in a char
 	char fileData[siz];
@@ -79,7 +81,7 @@ Graph *Graph_read(const char *filename)
 	//Read content and store in filedata, if file not empty
 	if(readFile != NULL)
 	{
-		fgets(fileData, siz, readFile);
+		fread(fileData, 1, siz, readFile);
 	}
 	else
 	{
@@ -88,38 +90,46 @@ Graph *Graph_read(const char *filename)
 
 	//now the data is in fileData!//
 
+	int size;
+	sscanf(fileData, "%d", &size);
+
 	//make the graph//
-	Graph *newGraph = Graph_new(fileData[0]);
+	Graph *newGraph = Graph_new(size);
 	Graph *p = newGraph;
 
 	//find the first line, excluding the vertex count
 	int k = 0;
-	for(; fileData[k] != '\n'; k++)
-	{
-		
-	}
+	for(; fileData[k] != '\n'; k++) {}
+
+	printf("%s\n", fileData);
 
 	//parsing time//
-	int firstLine = k + 1;
+	int current = k + 1;
 	int edges = 0;
 
 	//the rows (vertices)
-	for(int i = 0; i < fileData[0]; i++)
+	for(int row = 0; row < size; row++)
 	{
+		int column = 0;
 		//the columns (edges)
-		for(int j = firstLine; fileData[j] != '\n'; j++)	//prior math: (i * (fileData[0] + 1)) + 2
+		for(; fileData[current] != '\n'; current++)	//prior math: (i * (fileData[0] + 1)) + 2
 		{
-			if(fileData[j] == 1)
+			if(fileData[current] == '1')
 			{
+				//printf("%c \n", fileData[current]);
 				edges++;
-				Graph_addEdge(p, i, j-2);
+				Graph_addEdge(p, row, column);
 			}
+			column++;
 		}
+		current++;
 	}
 	//update edges on the graph?
 	newGraph->numEdges = edges;
 	
 	fclose(readFile);
+
+	return p;
 }
 
 

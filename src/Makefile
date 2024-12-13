@@ -1,5 +1,5 @@
 SAN_FLAGS = -fsanitize=address,undefined,leak
-CFLAGS = -Wall  -g -O2 $(SAN_FLAGS)
+CFLAGS = -Wall -g $(SAN_FLAGS)
 LDLIBS = -lm
 LDFLAGS = $(SAN_FLAGS)
 
@@ -11,4 +11,3 @@ detectCycles: $(OBJS)
 .PHONY: clean
 clean:
 	rm -f *.o detectCycles
-	

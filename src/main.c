@@ -14,6 +14,7 @@ int main(int argc, char **argv)
 	}
 	
 	Graph *g = Graph_read(argv[1]);
+	Graph_print(g);
 	if(!g) return 2;
 	cycleDetection(g);
 	Graph_delete(g);
