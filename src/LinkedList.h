@@ -30,8 +30,9 @@ struct LinkedListNode
 LinkedList *LinkedList_new()
 {
 	LinkedList *l = malloc(sizeof(LinkedList));
-	LinkedList newLinkedList = {NULL, NULL, 0};
-	l = &newLinkedList;
+	l->head = NULL;
+	l->tail = NULL;
+	l->size = 0;
 	return l;
 }
 
@@ -56,9 +57,15 @@ void LinkedList_delete(LinkedList *ll)
 LinkedListNode *LinkedList_append(LinkedList *ll, void *elem)
 {
 	LinkedListNode *n = malloc(sizeof(LinkedListNode));
-	LinkedListNode newNode = {NULL, ll->tail, elem};
-	n = &newNode;
-	ll->tail->next = n;
+	n->next = NULL;
+	n->prev = ll->tail;
+	n->data = elem;
+	if (ll->tail != NULL) {
+		ll->tail->next = n;
+	}
+	if (ll->head == NULL) {
+		ll->head = n;
+	}
 	ll->tail = n;
 	ll->size++;
 	return n;
@@ -84,10 +91,11 @@ LinkedListNode *LinkedList_find(LinkedList *ll, void *elem)
 {
 	LinkedListNode *current = ll->head;
 	void *result = NULL;
-	for (int i = 0; i <= ll->size; i++) {
-		if (&elem == &current->data) {
-			result = current->data;
+	for (int i = 0; i < ll->size; i++) {
+		if (elem == current->data) {
+			result = current;
 		}
+		current = current->next;
 	}
 	return result;
 }
@@ -99,9 +107,25 @@ void *LinkedList_remove(LinkedList *ll, LinkedListNode *node)
 {
 	if (LinkedList_find(ll, node->data) == NULL) {
 		printf("Node not in list");
+		return NULL;
 	}
-	node->prev->next = node->next;
-	node->next->prev = node->prev; 
+	if (node->prev != NULL) 
+	{
+		node->prev->next = node->next;
+	}
+	else 
+	{
+		ll->head = node->next;
+	}
+	if (node->next != NULL) 
+	{
+		node->next->prev = node->prev;
+	}
+	else
+	{
+		ll->tail = node->prev;
+	}
+	 
 	ll->size = ll->size - 1;
 	void *data = node->data;
 	free(node);

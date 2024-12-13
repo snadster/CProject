@@ -31,15 +31,15 @@ Graph *Graph_new(int n)
 {
 	Graph *g = malloc(sizeof(Graph));
 	Vertex *arr = malloc(sizeof(Vertex)*n);
-	Vertex vertices[n];
 	for (int i = 0; i < n; i++) 
 	{
-		Vertex newVertex = {i, LinkedList_new(), LinkedList_new()};
-		vertices[i] = newVertex;
+		arr[i].id = i;
+		arr[i].inNeighbours = LinkedList_new();
+		arr[i].outNeighbours = LinkedList_new();
 	}
-	arr = vertices;
-	Graph newGraph = {n, 0, arr};
-	g = &newGraph;
+	g->numVertices = n;
+	g->numEdges = 0;
+	g->vertices = arr;
 	return g;
 }
 
@@ -52,6 +52,8 @@ void Graph_addEdge(Graph *g, int i, int j)
 
 	void* in = &g -> vertices[i];
 	LinkedList_append(g->vertices[j].inNeighbours, in);
+
+	g->numEdges++;
 }
 
 
@@ -73,8 +75,7 @@ Graph *Graph_read(const char *filename)
 	long start = fseek(readFile, 0L, SEEK_SET);
 	
 	int siz = end - start;
-	printf("%d", siz);
-
+	
 	//store content of file in a char
 	char fileData[siz];
 
@@ -101,31 +102,23 @@ Graph *Graph_read(const char *filename)
 	int k = 0;
 	for(; fileData[k] != '\n'; k++) {}
 
-	printf("%s\n", fileData);
-
 	//parsing time//
-	int current = k + 1;
-	int edges = 0;
+	int beginning = k + 1;
 
 	//the rows (vertices)
 	for(int row = 0; row < size; row++)
 	{
-		int column = 0;
 		//the columns (edges)
-		for(; fileData[current] != '\n'; current++)	//prior math: (i * (fileData[0] + 1)) + 2
+		for(int column = 0; column < size; column++)	//prior math: (i * (fileData[0] + 1)) + 2
 		{
-			if(fileData[current] == '1')
+			// Specialised for delicius windows newlines (hate them)
+			int i = beginning + row*(size+2) + column;
+			if(fileData[i] == '1')
 			{
-				//printf("%c \n", fileData[current]);
-				edges++;
 				Graph_addEdge(p, row, column);
 			}
-			column++;
 		}
-		current++;
 	}
-	//update edges on the graph?
-	newGraph->numEdges = edges;
 	
 	fclose(readFile);
 
@@ -136,12 +129,12 @@ Graph *Graph_read(const char *filename)
 // Deallocates the given graph and all its associated memory.
 void Graph_delete(Graph *g)
 {
-	int sizebit = (sizeof(g->vertices) / sizeof(g->vertices[0]));
-	for(int i = 0; i < sizebit; i++)
+	for(int i = 0; i < g->numVertices; i++)
 	{
 		LinkedList_delete(g->vertices[i].outNeighbours);
 		LinkedList_delete(g->vertices[i].inNeighbours);
 	}
+	free(g->vertices);
 	free(g);
 }
 
@@ -162,11 +155,11 @@ void Graph_print(Graph *g)
 	//print visual representation of the 
 	//accompanying adjecency matrix
 	int graphLines = g->numVertices; //nr rows and nr bubbles
-	for(int k = 0; k <= graphLines; k++)
+	for(int k = 0; k < graphLines; k++)
 	{
 		for (int j = 0; j < graphLines; j++) 
 		{
-			void* edge = &g -> vertices[j];
+			void* edge = &g->vertices[j];
 			if (LinkedList_find(g->vertices[k].outNeighbours, edge))
 			{
 				printf("1");

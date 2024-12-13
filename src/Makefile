@@ -3,7 +3,7 @@ CFLAGS = -Wall -g $(SAN_FLAGS)
 LDLIBS = -lm
 LDFLAGS = $(SAN_FLAGS)
 
-OBJS = LinkedList.h Graph.h cycleDetection.h main.c
+OBJS = LinkedList.o Graph.o cycleDetection.o main.o
 
 detectCycles: $(OBJS)
 	$(CC) $(LDFLAGS) -o  $@  $^  $(LDLIBS)

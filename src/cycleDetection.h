@@ -35,15 +35,16 @@ void cycleDetection(Graph *g)
         for (int v = 0; v < g->numVertices; v++) 
         {
             void* p = &g -> vertices[v]; 
-            if (LinkedList_find(g->vertices[u].outNeighbours, p))
+            LinkedListNode *node = LinkedList_find(g->vertices[u].outNeighbours, p);
+            if (node)
             {
                 if (g->vertices[v].inNeighbours->size == 1) 
                 {
                     S[last++] = v;
                 }
-                LinkedList_remove(g->vertices[u].outNeighbours, p);
-                void* p_ = &g -> vertices[u];
-                LinkedList_remove(g->vertices[v].inNeighbours, p_);
+                LinkedList_remove(g->vertices[u].outNeighbours, node);
+                LinkedListNode *node2 = LinkedList_find(g->vertices[v].inNeighbours, &g->vertices[u]);
+                LinkedList_remove(g->vertices[v].inNeighbours, node2);
                 g->numEdges--;
             }
         }
@@ -51,7 +52,7 @@ void cycleDetection(Graph *g)
 
     if (g->numEdges != 0) 
     {
-        printf("Cycle detected!");
+        printf("Cycle detected! \n");
     }
     else 
     {
