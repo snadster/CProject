@@ -1,8 +1,7 @@
-
 SAN_FLAGS = -fsanitize=address ,undefined ,leak
 CFLAGS = -Wall  -g -O2 $(SAN_FLAGS)
 LDLIBS = -lm  -lstuff
-CPPFLAGS = -Ipath/to/stuff/include
+CPPFLAGS = -ICProject/cycleDetection.h -ICProject/LinkedList.h -IGraph.h
 LDFLAGS = -Lpath/to/stuff/lib $(SAN_FLAGS)
 
 OBJS = LinkedList.h Graph.h cycleDetection.h main.c
@@ -13,3 +12,4 @@ detectCycles: $(OBJS)
 .PHONY: clean
 clean:
 	rm -f *.o detectCycles
+	

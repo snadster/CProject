@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <errno.h>
+#include <stdlib.h>
 // A linked list containing any type of pointer.
 // The linked list does _not_ own its elements.
 

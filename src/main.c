@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char **argv) {
-	if(argc < 2) {
+int main(int argc, char **argv) 
+{
+	if(argc < 2) 
+	{
 		printf("Missing argument: input file\n");
 		printf("Usage:\n");
 		printf("%s <filename>\n", argv[0]);

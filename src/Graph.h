@@ -3,6 +3,7 @@
 
 #include "LinkedList.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 //style wise, im using: //header//, //subheader
 
@@ -29,13 +30,16 @@ struct Graph
 Graph *Graph_new(int n)
 {
 	Graph *g = malloc(sizeof(Graph));
-	Vertex arr[n];
-	for (int i = 0; i < n; i++){
-		arr[i].outNeighbours = LinkedList_new();
-		arr[i].inNeighbours = LinkedList_new(); 
+	Vertex *arr = malloc(sizeof(Vertex)*n);
+	Vertex vertices[n];
+	for (int i = 0; i < n; i++) 
+	{
+		Vertex newVertex = {i, LinkedList_new(), LinkedList_new()};
+		vertices[i] = newVertex;
 	}
+	arr = vertices;
 	Graph newGraph = {n, 0, arr};
-	Graph g = newGraph;
+	g = &newGraph;
 	return g;
 }
 
@@ -43,11 +47,11 @@ Graph *Graph_new(int n)
 // Adds an edge from the i'th to the j'th vertex (0-indexed).
 void Graph_addEdge(Graph *g, int i, int j)
 {
-	void (*out)(Vertex*) = &g -> vertices[j];
-	LinkedList_append(&g->vertices[i].outNeighbours, out);
+	void* out = &g -> vertices[j];
+	LinkedList_append(g->vertices[i].outNeighbours, out);
 
-	void (*in)(Vertex*) = &g -> vertices[i];
-	LinkedList_append(&g->vertices[j].inNeighbours, in);
+	void* in = &g -> vertices[i];
+	LinkedList_append(g->vertices[j].inNeighbours, in);
 }
 
 
@@ -59,7 +63,8 @@ Graph *Graph_read(const char *filename)
 {
 	//read file//
 	//open the file in read mode
-	int readFile = fopen("filename", "r");
+	FILE *readFile;
+	readFile = fopen("filename", "r");
 
 	//find file size (siz)
 	fseek(readFile, 0L, SEEK_END);
@@ -71,13 +76,10 @@ Graph *Graph_read(const char *filename)
 	//store content of file in a char
 	char fileData[siz];
 
-	//read the data into the file, it it is not empty
+	//Read content and store in filedata, if file not empty
 	if(readFile != NULL)
 	{
-		while(fgets(fileData, siz, readFile))
-		{
-			printf("%S", fileData);
-		}
+		fgets(fileData, siz, readFile);
 	}
 	else
 	{
@@ -88,13 +90,13 @@ Graph *Graph_read(const char *filename)
 
 	//make the graph//
 	Graph *newGraph = Graph_new(fileData[0]);
-	Graph *p = &newGraph;
+	Graph *p = newGraph;
 
 	//find the first line, excluding the vertex count
 	int k = 0;
 	for(; fileData[k] != '\n'; k++)
 	{
-		return k;
+		
 	}
 
 	//parsing time//
@@ -149,16 +151,20 @@ void Graph_print(Graph *g)
 	
 	//print visual representation of the 
 	//accompanying adjecency matrix
-	int graphLines = &g->numVertices; //nr rows and nr bubbles
+	int graphLines = g->numVertices; //nr rows and nr bubbles
 	for(int k = 0; k <= graphLines; k++)
 	{
-		char row[graphLines];
+		int row[graphLines];
 		for (int j = 0; j < graphLines; j++) 
 		{
-			void (*edge)(Vertex*) = &g -> vertices[j];
+			void* edge = &g -> vertices[j];
 			if (LinkedList_find(g->vertices[k].outNeighbours, edge))
 			{
 				row[j] = 1;
+			}
+			else 
+			{
+				row[j] = 0;
 			}
 		}
 		printf("%c \n", row);
