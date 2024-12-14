@@ -78,7 +78,8 @@ LinkedListNode *LinkedList_append(LinkedList *ll, void *elem)
 // Pre: ll->size != 0
 void *LinkedList_popFront(LinkedList *ll)
 {
-	if (ll->size == 0) {
+	if (ll->size == 0) 
+	{
 		printf("Cannot pop from empty list");
 	}
 	LinkedListNode *elem = ll->head;
@@ -94,8 +95,10 @@ LinkedListNode *LinkedList_find(LinkedList *ll, void *elem)
 {
 	LinkedListNode *current = ll->head;
 	void *result = NULL;
-	for (int i = 0; i < ll->size; i++) {
-		if (elem == current->data) {
+	for (int i = 0; i < ll->size; i++) 
+	{
+		if (elem == current->data) 
+		{
 			result = current;
 		}
 		current = current->next;
@@ -108,7 +111,8 @@ LinkedListNode *LinkedList_find(LinkedList *ll, void *elem)
 // Returns: node->data
 void *LinkedList_remove(LinkedList *ll, LinkedListNode *node)
 {
-	if (LinkedList_find(ll, node->data) == NULL) {
+	if (LinkedList_find(ll, node->data) == NULL) 
+	{
 		printf("Node not in list");
 		return NULL;
 	}
