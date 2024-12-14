@@ -49,17 +49,21 @@ void cycleDetection(Graph *g)
             }
         }
     }
-
+    // did we or did we not find a cycle?
     if (g->numEdges != 0) 
     {
         printf("Cycle detected! \n");
     }
     else 
     {
+        printf("Order: ");
         for (int i = 0; i < g->numVertices; i++) 
         {
-            printf("%d\n", L[i]);
+            printf("%d ", L[i]);
         }
-    }
+       printf("\n\n");
+    }  
 }
+
+
 #endif // CYCLEDETECTION_H

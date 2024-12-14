@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//style wise, im using: //header//, //subheader
-
 typedef struct Vertex Vertex;
 typedef struct Graph Graph;
 struct Vertex 
@@ -29,6 +27,7 @@ struct Graph
 // Post: the caller owns the graph.
 Graph *Graph_new(int n)
 {
+	// allocate space 
 	Graph *g = malloc(sizeof(Graph));
 	Vertex *arr = malloc(sizeof(Vertex)*n);
 	for (int i = 0; i < n; i++) 
@@ -37,6 +36,7 @@ Graph *Graph_new(int n)
 		arr[i].inNeighbours = LinkedList_new();
 		arr[i].outNeighbours = LinkedList_new();
 	}
+	// assign values
 	g->numVertices = n;
 	g->numEdges = 0;
 	g->vertices = arr;
@@ -63,12 +63,12 @@ void Graph_addEdge(Graph *g, int i, int j)
 // Post: the caller owns the graph.
 Graph *Graph_read(const char *filename)
 {
-	//read file//
-	//open the file in read mode
+	// read file //
+	// open the file in read mode
 	FILE *readFile;
 	readFile = fopen(filename, "r");
 
-	//find file size (siz)
+	// find file size (siz)
 	fseek(readFile, 0L, SEEK_END);
 
 	long end = ftell(readFile);
@@ -76,10 +76,10 @@ Graph *Graph_read(const char *filename)
 	
 	int siz = end - start;
 	
-	//store content of file in a char
+	// store content of file in a char
 	char fileData[siz];
 
-	//Read content and store in filedata, if file not empty
+	// Read content and store in filedata, if file not empty
 	if(readFile != NULL)
 	{
 		fread(fileData, 1, siz, readFile);
@@ -89,29 +89,29 @@ Graph *Graph_read(const char *filename)
 		printf("Not able to open file");
 	}
 
-	//now the data is in fileData!//
+	// now the data is in fileData!//
 
 	int size;
 	sscanf(fileData, "%d", &size);
 
-	//make the graph//
+	// make the graph //
 	Graph *newGraph = Graph_new(size);
 	Graph *p = newGraph;
 
-	//find the first line, excluding the vertex count
+	// find the first line, excluding the vertex count
 	int k = 0;
 	for(; fileData[k] != '\n'; k++) {}
 
-	//parsing time//
+	// parsing time //
 	int beginning = k + 1;
 
-	//the rows (vertices)
+	// the rows (vertices)
 	for(int row = 0; row < size; row++)
 	{
-		//the columns (edges)
-		for(int column = 0; column < size; column++)	//prior math: (i * (fileData[0] + 1)) + 2
+		// the columns (edges)
+		for(int column = 0; column < size; column++)
 		{
-			// Specialised for delicius windows newlines (hate them)
+			// specialised for windows newlines (hate them)
 			int i = beginning + row*(size+2) + column;
 			if(fileData[i] == '1')
 			{
@@ -139,40 +139,99 @@ void Graph_delete(Graph *g)
 }
 
 // Prints some useful information about the given graph.
+// (and prints some stylish ascii)
 void Graph_print(Graph *g)
 {
-	//print amt. of vertices and edges.
-	printf("\t\t|DATA|\n ________________________________________________\n");
+	//define nr. of rows and columns.
+	int graphLines = g->numVertices;
+
+	// aesthetics and ascii art //
+	// we highly reccomend printing this function
+	// in order to see its full potential.
+	// !! the wrap-around breaks it by graphmatrix-5.txt !!
+	printf("            ____    _  _____  _     \n");
+	printf("           |  _ \\  / \\|_   _|/ \\    \n");
+	printf("           | | | |/ _ \\ | | / _ \\   \n");
+	printf("           | |_| / ___ \\| |/ ___ \\  \n");
+	printf("           |____/_/   \\_\\_/_/   \\_\\ \n");
+	printf("\n");
+	printf(" ________________________________________________\n");
 	printf("| The entered graph contains the following data: |\n");
 	printf("  Number of vertices: %d \n", g->numVertices);
-	printf("  Number of edges: 	%d \n", g->numEdges);
+	printf("  Number of edges:    %d \n", g->numEdges);
 	printf("|________________________________________________|\n");
 	printf(" ________________________________________________\n");
-	printf("|The following as an adjecency matrix representation \n of the given graph: \n");
-	printf(" ________________________________________________\n");
-	printf("|                                                |\n");
+	printf("|  The following is an adjecency matrix          | \n  representation of the given graph: \n");
+	printf(" ");
+
+	// printing the matrix correctly (and in style) //
+	// style
+	for(int s = 0; s < (graphLines+1); s++)
+	{
+		printf("__");
+	}
+	printf("_");
+	printf("\n");
+	printf("|");
+	for(int s = 0; s < (graphLines+1); s++)
+	{
+		printf("  ");
+	} 
+	printf(" ");
+	printf("|\n");
 	
-	//print visual representation of the 
-	//accompanying adjecency matrix
-	int graphLines = g->numVertices; //nr rows and nr bubbles
+	//visual representation of the adjecency matrix
 	for(int k = 0; k < graphLines; k++)
 	{
+		printf("  ");
 		for (int j = 0; j < graphLines; j++) 
 		{
 			void* edge = &g->vertices[j];
 			if (LinkedList_find(g->vertices[k].outNeighbours, edge))
 			{
-				printf("1");
+				printf(" 1");
 			}
 			else 
 			{
-				printf("0");
+				printf(" 0");
 			}
 		}
 		printf("\n");
 	}
-	printf("|                                                |\n");
-	printf(" ________________________________________________\n");
+
+	// more style
+	printf("|");
+	for(int s = 0; s < (graphLines+1); s++)
+	{
+		printf("__");
+	}
+	printf("_");
+	printf("|\n");
+	printf("\n\n\n");
+}
+
+
+// spreads some christmas cheer
+void MerryChristmas()
+{
+	printf("         |\n");
+	printf("        -+-\n");
+	printf("         A\n");
+	printf("        /=\\               /\\  /\\    ___  _ __  _ __ __    __ \n");
+	printf("      i/ O \\i            /  \\/  \\  / _ \\| '__|| '__|\\ \\  / / \n");
+	printf("      /=====\\           / /\\  /\\ \\|  __/| |   | |    \\ \\/ / \n");
+	printf("      /  i  \\           \\ \\ \\/ / / \\___/|_|   |_|     \\  / \n");
+	printf("    i/ O * O \\i                                       / /\n");
+	printf("    /=========\\        __  __                        /_/    _\n");
+	printf("    /  *   *  \\        \\ \\/ /        /\\  /\\    __ _  ____  | |\n");
+	printf("  i/ O   i   O \\i       \\  /   __   /  \\/  \\  / _` |/ ___\\ |_|\n");
+	printf("  /=============\\       /  \\  |__| / /\\  /\\ \\| (_| |\\___ \\  _\n");
+	printf("  /  O   i   O  \\      /_/\\_\\      \\ \\ \\/ / / \\__,_|\\____/ |_|\n");
+	printf("i/ *   O   O   * \\i\n");
+	printf("/=================\\\n");
+	printf("       |___|\n\n");
+	printf("(and a happy new year :)\n\n");
+
 }
 
 #endif // GRAPH_H

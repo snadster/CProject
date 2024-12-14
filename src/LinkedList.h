@@ -60,10 +60,13 @@ LinkedListNode *LinkedList_append(LinkedList *ll, void *elem)
 	n->next = NULL;
 	n->prev = ll->tail;
 	n->data = elem;
-	if (ll->tail != NULL) {
+
+	if (ll->tail != NULL) 
+	{
 		ll->tail->next = n;
 	}
-	if (ll->head == NULL) {
+	if (ll->head == NULL) 
+	{
 		ll->head = n;
 	}
 	ll->tail = n;
