@@ -56,7 +56,7 @@ void cycleDetection(Graph *g)
     }
     else 
     {
-        printf("Order: ");
+        printf("The graph is a DAG! \nTopological Order: ");
         for (int i = 0; i < g->numVertices; i++) 
         {
             printf("%d ", L[i]);

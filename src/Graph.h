@@ -91,12 +91,11 @@ Graph *Graph_read(const char *filename)
 
 	// now the data is in fileData!//
 
-	int size;
-	sscanf(fileData, "%d", &size);
+	int num;
+	sscanf(fileData, "%d", &num);
 
 	// make the graph //
-	Graph *newGraph = Graph_new(size);
-	Graph *p = newGraph;
+	Graph *newGraph = Graph_new(num);
 
 	// find the first line, excluding the vertex count
 	int k = 0;
@@ -106,23 +105,23 @@ Graph *Graph_read(const char *filename)
 	int beginning = k + 1;
 
 	// the rows (vertices)
-	for(int row = 0; row < size; row++)
+	for(int row = 0; row < num; row++)
 	{
 		// the columns (edges)
-		for(int column = 0; column < size; column++)
+		for(int column = 0; column < num; column++)
 		{
 			// specialised for windows newlines (hate them)
-			int i = beginning + row*(size+2) + column;
+			int i = beginning + row*(num+2) + column;
 			if(fileData[i] == '1')
 			{
-				Graph_addEdge(p, row, column);
+				Graph_addEdge(newGraph, row, column);
 			}
 		}
 	}
 	
 	fclose(readFile);
 
-	return p;
+	return newGraph;
 }
 
 
